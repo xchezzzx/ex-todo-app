@@ -1,4 +1,4 @@
-# node-todo-cicd
+# To RUN the app locally: 
 
 Run these commands:
 
@@ -10,6 +10,7 @@ Run these commands:
 
 
 `npm install`
+
 
 `node app.js`
 
