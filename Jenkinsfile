@@ -79,20 +79,22 @@ pipeline {
 
         stage ("Notofocation") {
             steps {
-                if (${healthCheck} == 0) {
-                    slackSend(
-                        channel: '#general',
-                        color: 'danger',
-                        message: "Application is not healthy!",
-                        token: 'slack-token'
-                    )
-                    emailext (
-                        subject: "Application is not healthy",
-                        body: "The health check failed",
-                        to: "example1@example.com, example2@example.com",
-                        mimeType: 'text/html',
-                        attachLog: true
-                    )
+                script {
+                    if (${healthCheck} == 0) {
+                        slackSend(
+                            channel: '#general',
+                            color: 'danger',
+                            message: "Application is not healthy!",
+                            token: 'slack-token'
+                        )
+                        emailext (
+                            subject: "Application is not healthy",
+                            body: "The health check failed",
+                            to: "example1@example.com, example2@example.com",
+                            mimeType: 'text/html',
+                            attachLog: true
+                        )
+                    }    
                 }
             }
         }
