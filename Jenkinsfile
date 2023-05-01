@@ -9,6 +9,7 @@
 // 1. Build and push Docker image to Docker Hub: Add a stage to the Jenkins pipeline that will build your Docker image and push it to Docker Hub. (This will make it easier for you to deploy your Docker image to multiple environments.)
 // 2. Run security scans: Add a stage to the Jenkins pipeline that will run security scans on your Docker image to ensure it is free of vulnerabilities. You can use tools like Aqua or Clair for this.
 
+def healthCheck = 0
 
 pipeline {
     agent any
@@ -68,7 +69,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        env.healthCheck = sh(script: "curl -sSfi -m 2 http://13.50.231.91:8000/todo --head | grep 200 -c >/dev/null", returnStdout: true).trim()
+                        healthCheck = sh(script: "curl -sSfi -m 2 http://13.50.231.91:8000/todo --head | grep 200 -c", returnStdout: true).trim()
                         echo "Healthcheck: ${healthCheck}"
                     } catch(Exception ex) {
                         println("Catching the exception");
@@ -81,7 +82,7 @@ pipeline {
         stage ("Notification") {
             steps {
                 script {
-                    if ("$healthCheck" == 0) {
+                    if (healthCheck == 0) {
                         slackSend(
                             channel: '#general',
                             color: 'danger',
