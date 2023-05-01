@@ -31,8 +31,8 @@ pipeline {
         stage("Dockerize") {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-io', passwordVariable: 'PASS', usernameVariable: "USER")]) {
-                        sh "docker-compose build"
-                        sh "docker tag chz-todo-app-img:latest xchezzzx/todo-app:0.0.1"
+                        sh "docker build . -t xchezzzx/todo-app:0.0.1"
+                        //sh "docker tag chz-todo-app-img:latest xchezzzx/todo-app:0.0.1"
                         sh "docker login -u $USER -p $PASS"
                         sh "docker push xchezzzx/ex-todo-app:0.0.1"                        
                 }
