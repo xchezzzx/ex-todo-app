@@ -21,7 +21,7 @@ pipeline {
     }
 
     stages {
-
+/*
         stage("Build and test") {
             steps {
                 //install dependencies
@@ -41,7 +41,7 @@ pipeline {
                 }
             }
         }
-
+*/
         stage("Deploy to EC2") {
             steps {
                 script {
