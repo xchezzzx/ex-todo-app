@@ -14,7 +14,6 @@ pipeline {
     agent any
     tools {
        nodejs "NodeJS19"
-       docker "Docker"
     }
 
     stages {
