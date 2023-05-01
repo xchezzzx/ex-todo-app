@@ -45,7 +45,7 @@ pipeline {
                     def public_dns = "ec2-13-50-231-91.eu-north-1.compute.amazonaws.com"
                     def deploy_path = "/app/"
 
-                    sshagent(["jenkins-ssh-ec2-pem"]) {
+                    sshagent(["jenkins-ssh-ec2"]) {
                         sh "ssh -o StrictHostKeyChecking=no ubuntu@${public_dns} 'docker run -p 8000:8000 -d xchezzzx/ex-todo-app:0.0.1'"
                     }
                 }
