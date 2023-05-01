@@ -13,7 +13,7 @@
 pipeline {
     agent any
     tools {
-       nodejs "NodeJS19" 
+       nodejs "NodeJS19"
     }
 
     stages {
@@ -24,6 +24,7 @@ pipeline {
                 sh "npm install"
                 //run internal tests
                 sh "npm run test"
+                sh "docker-compose --version"
             }
         }
 
