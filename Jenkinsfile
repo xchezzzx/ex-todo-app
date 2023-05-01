@@ -35,7 +35,7 @@ pipeline {
                     def deploy_path = "/app/"
 
                     sshagent(["jenkins-ssh-ec2-pem"]) {
-                        sh "ssh ubuntu@${public_dns} 'mkdir app"
+                        sh "ssh ubuntu@${public_dns} 'mkdir app'"
                     }
                 }
             }
