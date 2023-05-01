@@ -29,15 +29,18 @@ pipeline {
 
         stage("Dockerize") {
             steps {
-                sh "docker-compose -t xchezzzx/ex-todo-app build ."
-                sh "docker push xchezzzx/ex-todo-app"
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-io', passwordVariable: 'PASS', usernameVariable: "USER")]) {
+                    sh "docker-compose build"
+                    sh "docker tag chz-todo-app-img:latest xchezzzx/todo-app:0.0.1"
+                    sh "docker login -u $USER -p $PASS"
+                    sh "docker push xchezzzx/ex-todo-app:0.0.1"    
+                }
             }
         }
 
         stage("Deploy to EC2") {
             steps {
                 script {
-                    def instance = "i-07abe295faf17503e"
                     def public_dns = "ec2-13-50-231-91.eu-north-1.compute.amazonaws.com"
                     def deploy_path = "/app/"
 
