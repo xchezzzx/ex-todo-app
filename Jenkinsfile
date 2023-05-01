@@ -10,7 +10,7 @@
 // 2. Run security scans: Add a stage to the Jenkins pipeline that will run security scans on your Docker image to ensure it is free of vulnerabilities. You can use tools like Aqua or Clair for this.
 
 def healthCheck = 0
-
+def public_dns = "ec2-13-53-188-209.eu-north-1.compute.amazonaws.com"
 def deploy_path = "/app/"
 def public_ip = "13.53.188.209"
 
@@ -45,9 +45,7 @@ pipeline {
         stage("Deploy to EC2") {
             steps {
                 script {
-
-                    def public_dns = "ec2-13-53-188-209.eu-north-1.compute.amazonaws.com"
-                    sshagent(["jenkins-ssh-ec2"]) {
+                    sshagent(["jenkins-ec2-keys"]) {
                         sh """
                             scp docker-compose.yml ubuntu@${public_dns}:~/
                             ssh -o StrictHostKeyChecking=no ubuntu@${public_dns} 'docker-compose up -d'
