@@ -47,7 +47,7 @@ pipeline {
                 script {
                     sshagent(["jenkins-ec2-keys"]) {
                         //sh "scp docker-compose.yml ubuntu@${public_dns}:~/"
-                        sh "ssh -o StrictHostKeyChecking=no ubuntu@${public_dns} 'docker-compose up -d'"    
+                        sh "ssh -v -o StrictHostKeyChecking=no ubuntu@${public_dns} 'docker-compose up -d'"    
                     }
                 }
             }
