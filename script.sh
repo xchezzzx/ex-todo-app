@@ -8,18 +8,31 @@
 #      If the application is healthy, exit the script.
 #BONUS: If the application is not healthy, send a notification via Slack or email. (curl) 
 
+# Define the SSH key file and EC2 instance IP address
+SSH_KEY="~/.ssh/oleg-key-pair.pem"
+PUBLIC_IP="13.53.188.209"
+
+# Connect to the EC2 instance using SSH
+ssh -i $SSH_KEY ubuntu@$EC2_IP
+
 # Install Docker and Docker Compose on the EC2 instance if they are not already installed.
 if ! command -v docker &> /dev/null
 then
-    sudo yum update -y
-    sudo amazon-linux-extras install docker -y
-    sudo systemctl start docker
+    sudo apt-get -y update
+    sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+    apt-cache policy docker-ce
+    sudo apt install -y docker-ce
+    sudo systemctl status docker
     sudo systemctl enable docker
+    sudo apt install -y make
+    sudo usermod -a -G docker ubuntu
 fi
 
 if ! command -v docker-compose &> /dev/null
 then
-    sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo apt install docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
 fi
 
@@ -41,5 +54,6 @@ if [[ "$HEALTH_CHECK" -eq 0 ]]; then
     exit 0
 else
     echo "Application is not healthy."
+    curl -X POST -H 'Content-type: application/json' --data '{"text":"Application is not healthy!"}' https://hooks.slack.com/services/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
     exit 1
 fi
