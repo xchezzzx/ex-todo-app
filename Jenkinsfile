@@ -77,10 +77,10 @@ pipeline {
             }
         }
 
-        stage ("Notofocation") {
+        stage ("Notification") {
             steps {
                 script {
-                    if (${healthCheck} == 0) {
+                    if (env.healthCheck == 0) {
                         slackSend(
                             channel: '#general',
                             color: 'danger',
