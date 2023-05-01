@@ -81,7 +81,7 @@ pipeline {
         stage ("Notification") {
             steps {
                 script {
-                    if (healthCheck == 0) {
+                    if ("$healthCheck" == 0) {
                         slackSend(
                             channel: '#general',
                             color: 'danger',
