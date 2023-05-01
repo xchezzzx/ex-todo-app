@@ -69,11 +69,11 @@ pipeline {
                 script {
                     try {
                         env.healthCheck = sh(script: "curl -sSfi -m 2 http://13.50.231.91:8000/todo --head | grep 200 -c >/dev/null", returnStdout: true).trim()
+                        echo "Healthcheck: ${healthCheck}"
                     } catch(Exception ex) {
                         println("Catching the exception");
+                        echo "Healthcheck: ${healthCheck}"
                     }
-
-                    echo "Healthcheck: ${healthCheck}"
                 }
             }
         }
