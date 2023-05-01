@@ -48,8 +48,8 @@ pipeline {
                     sshagent(["jenkins-ssh-ec2"]) {
                         sh """
                             scp docker-compose.yml ubuntu@${public_dns}:~/app
-                            ssh -o StrictHostKeyChecking=no ubuntu@${public_dns} 'cd ./app'
-                            ssh -o StrictHostKeyChecking=no ubuntu@${public_dns} 'docker-compose build'
+                            ssh -o StrictHostKeyChecking=no ubuntu@${public_dns} 'cd ~/app'
+                            ssh -o StrictHostKeyChecking=no ubuntu@${public_dns} 'docker-compose up -d'
                         """
                     }
                 }
