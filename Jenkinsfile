@@ -10,6 +10,9 @@
 // 2. Run security scans: Add a stage to the Jenkins pipeline that will run security scans on your Docker image to ensure it is free of vulnerabilities. You can use tools like Aqua or Clair for this.
 
 def healthCheck = 0
+def public_dns = "ec2-13-53-188-209.eu-north-1.compute.amazonaws.com"
+def deploy_path = "/app/"
+def public_ip = "13.53.188.209"
 
 pipeline {
     agent any
@@ -43,9 +46,6 @@ pipeline {
         stage("Deploy to EC2") {
             steps {
                 script {
-                    def public_dns = "ec2-13-50-231-91.eu-north-1.compute.amazonaws.com"
-                    def deploy_path = "/app/"
-
                     sshagent(["jenkins-ssh-ec2"]) {
 //Part 4: Write a bash script to automate the process of deploying:
 // 1. Connect to the EC2 instance using SSH.
@@ -69,7 +69,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        healthCheck = sh(script: "curl -sSfi -m 2 http://13.53.188.209:8000/todo --head | grep 200 -c", returnStdout: true).trim()
+                        healthCheck = sh(script: "curl -sSfi -m 2 ${public_ip}:8000/todo --head | grep 200 -c", returnStdout: true).trim()
                         echo "Healthcheck: ${healthCheck}"
                     } catch(Exception ex) {
                         println("Catching the exception");
