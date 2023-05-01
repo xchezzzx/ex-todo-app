@@ -68,12 +68,12 @@ pipeline {
             steps {
                 script {
                     try {
-                        env.healthCheck = sh(script: "curl -sSfi -m 5 http://13.50.231.91:8000/todo --head | grep 200 -c", returnStdout: true).trim()
+                        env.healthCheck = sh(script: "curl -sSfi -m 2 http://13.50.231.91:8000/todo --head | grep 200 -c >/dev/null", returnStdout: true).trim()
                     } catch(Exception ex) {
                         println("Catching the exception");
                     }
-                    
-                    echo "${healthCheck}"
+
+                    echo "Healthcheck: ${healthCheck}"
                 }
             }
         }
@@ -81,7 +81,7 @@ pipeline {
         stage ("Notification") {
             steps {
                 script {
-                    if (env.healthCheck == 0) {
+                    if (healthCheck == 0) {
                         slackSend(
                             channel: '#general',
                             color: 'danger',
