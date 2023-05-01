@@ -45,7 +45,7 @@ pipeline {
         stage("Deploy to EC2") {
             steps {
                 script {
-                    sshagent(["jenkins-ec2-keys"]) {
+                    sshagent(["jenkins-ssh-ec2"]) {
                         //sh "scp docker-compose.yml ubuntu@${public_dns}:~/"
                         sh "ssh -v -o StrictHostKeyChecking=no ubuntu@${public_dns} 'docker-compose up -d'"    
                     }
