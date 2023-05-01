@@ -46,7 +46,12 @@ pipeline {
                     def deploy_path = "/app/"
 
                     sshagent(["jenkins-ssh-ec2"]) {
-                        sh "ssh -o StrictHostKeyChecking=no ubuntu@${public_dns} 'docker run -p 8000:8000 -d xchezzzx/ex-todo-app:0.0.1'"
+                        sh """
+                            ssh -o StrictHostKeyChecking=no ubuntu@${public_dns} 'mkdir app'
+                            scp docker-compose.yml ubuntu@${public_dns}:/app
+                            ssh -o StrictHostKeyChecking=no ubuntu@${public_dns} 'cd ./app'
+                            ssh -o StrictHostKeyChecking=no ubuntu@${public_dns} 'docker-compose build'
+                        """
                     }
                 }
             }
