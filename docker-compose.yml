@@ -2,6 +2,8 @@ version: "3.8"
 
 services:
   web:
+    container_name: chz-todo-app-cnt
+    image: chz-todo-app-img
     build: 
       context: .
       dockerfile: Dockerfile
