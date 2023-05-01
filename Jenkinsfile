@@ -38,7 +38,7 @@ pipeline {
                 }
             }
         }
-*/
+*/ /*
         stage("Deploy to EC2") {
             steps {
                 script {
@@ -46,11 +46,53 @@ pipeline {
                     def deploy_path = "/app/"
 
                     sshagent(["jenkins-ssh-ec2"]) {
+//Part 4: Write a bash script to automate the process of deploying:
+// 1. Connect to the EC2 instance using SSH.
+// 2. Install Docker and Docker Compose on the EC2 instance if they are not already installed.
+// 3. Stop and remove any existing containers that are running on the EC2 instance.
+// 4. Pull the latest Docker image from Docker Hub.
+// 5. Start the new containers based on the Docker image.
+// 6. Check the health of the application by running a curl command to the health endpoint.
+//       If the application is healthy, exit the script.
+// BONUS: If the application is not healthy, send a notification via Slack or email. (curl) 
                         sh """
                             scp docker-compose.yml ubuntu@${public_dns}:~/app
                             ssh -o StrictHostKeyChecking=no ubuntu@${public_dns} 'docker-compose -f ~/app/docker-compose.yml up -d'
                         """
                     }
+                }
+            }
+        }
+*/
+        stage("Check") {
+            steps {
+                script {
+                    try {
+                        sh "curl -sSfi http://13.50.231.91:8000/todo --head | grep 200 -c"
+                        env.healthCheck = 1
+                    } catch(Exception ex) {
+                        env.healthCheck = 0
+                    }
+                }
+            }
+        }
+
+        stage ("Notofocation") {
+            steps {
+                if (${healthCheck} == 0) {
+                    slackSend(
+                        channel: '#general',
+                        color: 'danger',
+                        message: "Application is not healthy!",
+                        token: 'slack-token'
+                    )
+                    emailext (
+                        subject: "Application is not healthy",
+                        body: "The health check failed",
+                        to: "example1@example.com, example2@example.com",
+                        mimeType: 'text/html',
+                        attachLog: true
+                    )
                 }
             }
         }
