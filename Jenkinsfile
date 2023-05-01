@@ -27,6 +27,13 @@ pipeline {
             }
         }
 
+        stage("Dockerize") {
+            steps {
+                sh "docker-compose -t xchezzzx/ex-todo-app build ."
+                sh "docker push xchezzzx/ex-todo-app"
+            }
+        }
+
         stage("Deploy to EC2") {
             steps {
                 script {
@@ -35,7 +42,7 @@ pipeline {
                     def deploy_path = "/app/"
 
                     sshagent(["jenkins-ssh-ec2-pem"]) {
-                        sh "ssh ubuntu@${public_dns} 'mkdir app'"
+                        sh "ssh -o StrictHostKeyChecking=no ubuntu@${public_dns} 'mkdir app'"
                     }
                 }
             }
