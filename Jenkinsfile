@@ -67,7 +67,12 @@ pipeline {
         stage("Check") {
             steps {
                 script {
-                    env.healthCheck = sh(script: "curl -sSfi -m 5 http://13.50.231.91:8000/todo --head | grep 200 -c", returnStdout: true).trim()
+                    try {
+                        env.healthCheck = sh(script: "curl -sSfi -m 5 http://13.50.231.91:8000/todo --head | grep 200 -c", returnStdout: true).trim()
+                    } catch(Exception ex) {
+                        println("Catching the exception");
+                    }
+                    
                     echo "${healthCheck}"
                 }
             }
