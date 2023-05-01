@@ -3,9 +3,9 @@ version: "3.8"
 services:
   web:
     container_name: chz-todo-app-cnt
-    image: chz-todo-app-img
-    build: 
-      context: .
-      dockerfile: Dockerfile
+    image: xchezzzx/ex-todo-app
+    #build: 
+    #  context: .
+    #  dockerfile: Dockerfile
     ports:
       - "8000:8000"
