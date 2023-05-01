@@ -18,7 +18,7 @@ pipeline {
     }
 
     stages {
-/*
+
         stage("Build and test") {
             steps {
                 //install dependencies
@@ -39,7 +39,7 @@ pipeline {
                 }
             }
         }
-*/ /*
+
         stage("Deploy to EC2") {
             steps {
                 script {
@@ -64,12 +64,12 @@ pipeline {
                 }
             }
         }
-*/
+
         stage("Check") {
             steps {
                 script {
                     try {
-                        healthCheck = sh(script: "curl -sSfi -m 2 http://13.50.231.91:8000/todo --head | grep 200 -c", returnStdout: true).trim()
+                        healthCheck = sh(script: "curl -sSfi -m 2 http://13.53.188.209:8000/todo --head | grep 200 -c", returnStdout: true).trim()
                         echo "Healthcheck: ${healthCheck}"
                     } catch(Exception ex) {
                         println("Catching the exception");
