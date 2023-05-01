@@ -73,6 +73,8 @@ pipeline {
                     } catch(Exception ex) {
                         env.healthCheck = 0
                     }
+
+                    echo "${healthCheck}"
                 }
             }
         }
